@@ -1,8 +1,0 @@
-spring:
-  datasource:
-    driver-class-name: com.mysql.jdbc.Driver
-    username: zlren
-    password: Lab2016!
-    url: jdbc:mysql://10.109.247.143/sell?characterEncoding=utf-8&useSSL=false
-  jpa:
-    show-sql: true
