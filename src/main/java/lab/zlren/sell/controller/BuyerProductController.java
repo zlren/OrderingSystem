@@ -7,6 +7,7 @@ import lab.zlren.sell.pojo.ProductCategory;
 import lab.zlren.sell.pojo.ProductInfo;
 import lab.zlren.sell.service.ProductCategoryService;
 import lab.zlren.sell.service.ProductInfoService;
+import lab.zlren.sell.util.ResultVOUtil;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -43,6 +43,7 @@ public class BuyerProductController {
         List<ProductCategory> productCategoryList = this.productCategoryService.queryByCategoryTypeIn(collect);
 
         // 数据拼装
+        List<ProductVO> productVOList = new ArrayList<>();
         for (ProductCategory productCategory : productCategoryList) {
             ProductVO productVO = new ProductVO();
             productVO.setCategoryType(productCategory.getCategoryType());
@@ -59,19 +60,9 @@ public class BuyerProductController {
             }
 
             productVO.setProductInfoVOList(productInfoVOList);
+            productVOList.add(productVO);
         }
 
-
-        ResultVO resultVO = new ResultVO();
-        ProductVO productVO = new ProductVO();
-        ProductInfoVO productInfoVO = new ProductInfoVO();
-
-        productVO.setProductInfoVOList(Arrays.asList(productInfoVO));
-        resultVO.setData(Arrays.asList(productVO));
-
-        resultVO.setCode(0);
-        resultVO.setMsg("成功哈哈");
-
-        return resultVO;
+        return ResultVOUtil.success(productVOList);
     }
 }

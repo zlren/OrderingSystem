@@ -1,4 +1,4 @@
-package lab.zlren.sell.common;
+package lab.zlren.sell.common.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
