@@ -7,6 +7,7 @@ import lab.zlren.sell.common.enums.ResultEnum;
 import lab.zlren.sell.common.exception.SellException;
 import lab.zlren.sell.common.vo.ResultVO;
 import lab.zlren.sell.pojo.OrderMaster;
+import lab.zlren.sell.service.OrderDetailService;
 import lab.zlren.sell.service.OrderMasterService;
 import lab.zlren.sell.util.ResultVOUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +32,8 @@ public class BuyerOrderController {
     @Autowired
     private OrderMasterService orderMasterService;
 
+    @Autowired
+    private OrderDetailService orderDetailService;
 
     /**
      * 创建订单
@@ -83,10 +86,50 @@ public class BuyerOrderController {
             throw new SellException(ResultEnum.PARAMETER_ERROR);
         }
 
-        log.info("三个参数{}, {}, {}", openid, page, size);
-
         PageInfo<OrderMaster> orderMasterPageInfo = this.orderMasterService.queryOrderListByOpenId(page, size, openid);
         return ResultVOUtil.success(orderMasterPageInfo.getList());
+    }
+
+
+    /**
+     * 查询订单详情
+     *
+     * @param openid
+     * @param orderId
+     * @return
+     */
+    @GetMapping("detail")
+    public ResultVO orderDetail(@RequestParam("openid") String openid, @RequestParam("orderId") String orderId) {
+
+        // TODO openid安全性校验
+
+        OrderMaster orderMaster = this.orderMasterService.queryByOrderId(orderId);
+
+        if (!orderMaster.getBuyerOpenid().equals(openid)) {
+            throw new SellException("openid非法");
+        }
+
+        return ResultVOUtil.success();
+    }
+
+
+    /**
+     * 取消订单
+     *
+     * @param openid
+     * @param orderId
+     * @return
+     */
+    @PostMapping("cancel")
+    public ResultVO orderCancel(@RequestParam("openid") String openid, @RequestParam("orderId") String orderId) {
+
+        OrderDTO orderDto = new OrderDTO();
+        orderDto.setOrderId(orderId);
+        orderDto.setBuyerOpenid(openid);
+
+        this.orderMasterService.cancel(orderDto);
+
+        return ResultVOUtil.success();
     }
 
 }

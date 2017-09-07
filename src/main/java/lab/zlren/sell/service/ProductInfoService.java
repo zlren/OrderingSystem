@@ -7,10 +7,12 @@ import lab.zlren.sell.common.exception.SellException;
 import lab.zlren.sell.pojo.OrderDetail;
 import lab.zlren.sell.pojo.ProductInfo;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by zlren on 17/9/4.
@@ -18,6 +20,9 @@ import java.util.List;
 @Service
 @Slf4j
 public class ProductInfoService extends BaseService<ProductInfo> {
+
+    @Autowired
+    private OrderDetailService orderDetailService;
 
     /**
      * 查询所有在架商品
@@ -61,6 +66,21 @@ public class ProductInfoService extends BaseService<ProductInfo> {
     @Transactional
     public void increaseStock(OrderDTO orderDTO) {
         this.increaseStock(orderDTO.getOrderDetailList());
+    }
+
+
+    /**
+     * 根据orderId返回库存
+     *
+     * @param orderId
+     */
+    @Transactional
+    public void increaseStock(String orderId) {
+        OrderDetail orderDetailRecord = new OrderDetail();
+        orderDetailRecord.setOrderId(orderId);
+        increaseStock(this.orderDetailService.queryListByWhere(orderDetailRecord).stream()
+                .map(orderDetail -> new OrderDetail(orderDetail.getProductId(), orderDetail.getProductQuantity()))
+                .collect(Collectors.toList()));
     }
 
 

@@ -111,7 +111,7 @@ public class OrderMasterService extends BaseService<OrderMaster> {
      * @return
      */
     @Transactional
-    public OrderDTO queryByOrderId(String orderId) {
+    public OrderMaster queryByOrderId(String orderId) {
 
         OrderMaster orderMasterRecord = new OrderMaster();
         orderMasterRecord.setOrderId(orderId);
@@ -129,11 +129,9 @@ public class OrderMasterService extends BaseService<OrderMaster> {
             throw new SellException(ResultEnum.ORDER_DETAIL_NOT_EXIST);
         }
 
-        OrderDTO result = new OrderDTO();
-        BeanUtils.copyProperties(orderMaster, result);
-        result.setOrderDetailList(orderDetailList);
+        orderMaster.setOrderDetailList(orderDetailList);
 
-        return result;
+        return orderMaster;
     }
 
 
@@ -172,10 +170,16 @@ public class OrderMasterService extends BaseService<OrderMaster> {
     @Transactional
     public OrderDTO cancel(OrderDTO orderDTO) {
 
+        log.error("哈哈哈，到这了");
+
         // 判断、修改订单状态
         OrderMaster record = new OrderMaster();
         record.setOrderId(orderDTO.getOrderId());
         OrderMaster orderMaster = this.queryOne(record);
+
+        if (!orderDTO.getBuyerOpenid().equals(orderMaster.getBuyerOpenid())) {
+            throw new SellException("openid非法");
+        }
 
         if (!orderMaster.getOrderStatus().equals(OrderStatusEnum.NEW.getCode())) {
             log.error("取消订单失败，orderId = {}， orderStatus = {}", orderMaster.getOrderId(), orderMaster.getOrderStatus());
@@ -186,10 +190,10 @@ public class OrderMasterService extends BaseService<OrderMaster> {
         this.update(orderMaster);
 
         // 返回库存
-        this.productInfoService.increaseStock(orderDTO);
+        this.productInfoService.increaseStock(orderDTO.getOrderId());
 
         // 如果已支付需要退款
-        if (record.getPayStatus().equals(PayStatusEnum.SUCCESS.getCode())) {
+        if (orderMaster.getPayStatus().equals(PayStatusEnum.SUCCESS.getCode())) {
             // todo 退款操作
             log.info("订单已支付，需退款");
         }
