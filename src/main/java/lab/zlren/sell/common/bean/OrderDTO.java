@@ -12,6 +12,7 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /**
@@ -29,6 +30,7 @@ public class OrderDTO {
     private String buyerPhone;
     private String buyerAddress;
     private String buyerOpenid;
+    private BigDecimal orderAmount;
     List<OrderDetail> orderDetailList;
 
     public OrderDTO(OrderMaster orderMaster) {
