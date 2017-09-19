@@ -3,6 +3,8 @@ package lab.zlren.sell.service;
 import com.lly835.bestpay.enums.BestPayTypeEnum;
 import com.lly835.bestpay.model.PayRequest;
 import com.lly835.bestpay.model.PayResponse;
+import com.lly835.bestpay.model.RefundRequest;
+import com.lly835.bestpay.model.RefundResponse;
 import com.lly835.bestpay.service.impl.BestPayServiceImpl;
 import lab.zlren.sell.common.bean.OrderDTO;
 import lab.zlren.sell.common.exception.SellException;
@@ -76,5 +78,25 @@ public class PayService {
         this.orderMasterService.pay(new OrderDTO(orderMaster));
 
         return payResponse;
+    }
+
+
+    /**
+     * 退款
+     *
+     * @param orderDTO
+     */
+    RefundResponse refund(OrderDTO orderDTO) {
+
+        RefundRequest refundRequest = new RefundRequest();
+        refundRequest.setOrderId(orderDTO.getOrderId());
+        refundRequest.setOrderAmount(orderDTO.getOrderAmount().doubleValue());
+        refundRequest.setPayTypeEnum(BestPayTypeEnum.WXPAY_H5);
+
+        log.info("微信退款 request={}", refundRequest);
+
+        RefundResponse refundResponse = this.bestPayService.refund(refundRequest);
+
+        return refundResponse;
     }
 }

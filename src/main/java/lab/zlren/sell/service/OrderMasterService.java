@@ -34,6 +34,9 @@ public class OrderMasterService extends BaseService<OrderMaster> {
     @Autowired
     private OrderDetailService orderDetailService;
 
+    @Autowired
+    private PayService payService;
+
     // /**
     //  * 按照买家的openid分页查找
     //  *
@@ -170,8 +173,6 @@ public class OrderMasterService extends BaseService<OrderMaster> {
     @Transactional
     public OrderDTO cancel(OrderDTO orderDTO) {
 
-        log.error("哈哈哈，到这了");
-
         // 判断、修改订单状态
         OrderMaster record = new OrderMaster();
         record.setOrderId(orderDTO.getOrderId());
@@ -194,8 +195,8 @@ public class OrderMasterService extends BaseService<OrderMaster> {
 
         // 如果已支付需要退款
         if (orderMaster.getPayStatus().equals(PayStatusEnum.SUCCESS.getCode())) {
-            // todo 退款操作
             log.info("订单已支付，需退款");
+            this.payService.refund(orderDTO);
         }
 
         return orderDTO;
