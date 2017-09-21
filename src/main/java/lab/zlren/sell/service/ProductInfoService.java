@@ -9,8 +9,8 @@ import lab.zlren.sell.pojo.ProductInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import javax.transaction.Transactional;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -109,5 +109,38 @@ public class ProductInfoService extends BaseService<ProductInfo> {
             this.update(productInfo);
         });
     }
+
+
+    /**
+     * 上架
+     *
+     * @param productId
+     */
+    @Transactional
+    public void onSale(String productId) {
+
+        ProductInfo record = new ProductInfo();
+        record.setProductId(productId);
+        record.setProductStatus(0);
+
+        this.update(record);
+    }
+
+
+    /**
+     * 下架
+     *
+     * @param productId
+     */
+    @Transactional
+    public void offSale(String productId) {
+
+        ProductInfo record = new ProductInfo();
+        record.setProductId(productId);
+        record.setProductStatus(1);
+
+        this.update(record);
+    }
+
 
 }

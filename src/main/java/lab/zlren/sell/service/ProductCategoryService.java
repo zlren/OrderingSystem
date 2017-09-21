@@ -2,6 +2,7 @@ package lab.zlren.sell.service;
 
 import lab.zlren.sell.pojo.ProductCategory;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import tk.mybatis.mapper.entity.Example;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public class ProductCategoryService extends BaseService<ProductCategory> {
      * @param list
      * @return
      */
+    @Transactional
     public List<ProductCategory> queryByCategoryTypeIn(List<Integer> list) {
         Example example = new Example(ProductCategory.class);
         Example.Criteria criteria = example.createCriteria();
