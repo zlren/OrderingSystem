@@ -2,7 +2,7 @@ package lab.zlren.sell.controller;
 
 import com.github.pagehelper.PageInfo;
 import lab.zlren.sell.common.bean.OrderDTO;
-import lab.zlren.sell.common.bean.OrderForm;
+import lab.zlren.sell.common.form.OrderForm;
 import lab.zlren.sell.common.enums.ResultEnum;
 import lab.zlren.sell.common.exception.SellException;
 import lab.zlren.sell.common.vo.ResultVO;

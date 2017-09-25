@@ -101,6 +101,14 @@ public class SellerProductController {
         return new ModelAndView("common/success", map);
     }
 
+
+    /**
+     * 类目
+     *
+     * @param productId
+     * @param map
+     * @return
+     */
     @GetMapping("/index")
     public ModelAndView index(@RequestParam(value = "productId", required = false) String productId,
                               Map<String, Object> map) {
@@ -119,6 +127,7 @@ public class SellerProductController {
         return new ModelAndView("product/index", map);
     }
 
+
     /**
      * 保存/更新
      *
@@ -131,6 +140,7 @@ public class SellerProductController {
     public ModelAndView save(@Valid ProductForm form,
                              BindingResult bindingResult,
                              Map<String, Object> map) {
+
         if (bindingResult.hasErrors()) {
             map.put("msg", bindingResult.getFieldError().getDefaultMessage());
             map.put("url", "/sell/seller/product/index");
