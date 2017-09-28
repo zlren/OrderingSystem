@@ -37,6 +37,9 @@ public class OrderMasterService extends BaseService<OrderMaster> {
     @Autowired
     private PayService payService;
 
+    @Autowired
+    private PushMessageService pushMessageService;
+
     // /**
     //  * 按照买家的openid分页查找
     //  *
@@ -225,6 +228,9 @@ public class OrderMasterService extends BaseService<OrderMaster> {
         // 修改订单状态
         orderMaster.setOrderStatus(OrderStatusEnum.FINISH.getCode());
         this.update(orderMaster);
+
+        // 推动微信模板消息
+        this.pushMessageService.orderStatus(new OrderDTO(orderMaster));
 
         return orderDTO;
     }
